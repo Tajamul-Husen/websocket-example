@@ -1,0 +1,4 @@
+GET http://localhost:3000/message
+    ?clientId=f89430ff-d0b7-4c24-b9d6-83d4f774abdf
+    &message=Hello, world!
+

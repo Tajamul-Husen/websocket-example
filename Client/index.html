@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Websocket Template</title>
+
+    <style>
+      .bar-wrapper {
+        padding-top: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .bar-container {
+        display: grid;
+        grid-template-columns: 200px 200px 200px;
+        grid-gap: 20px;
+        align-items: flex-end;
+        height: 500px;
+      }
+      .bar {
+        height: 450px;
+        overflow: hidden;
+        background-color: rgb(255, 99, 132, 0.8);
+        border: 2px solid rgb(255, 99, 132, 1);
+      }
+      .btn-container {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="bar-wrapper">
+        <div class="bar-container">
+          <div class="bar" id="bar-1"></div>
+          <div class="bar" id="bar-2"></div>
+          <div class="bar" id="bar-3"></div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="btn-container">
+        <button id="connect-btn">connect</button>
+        <button id="disconnect-btn">disconnect</button>
+      </div>
+
+
+      <div >
+        <input type="range" min="1" max="450" value="450" id="slider-1" />
+        <input type="range" min="1" max="450" value="450" id="slider-2" />
+        <input type="range" min="1" max="450" value="450" id="slider-3" />
+      </div>
+
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
