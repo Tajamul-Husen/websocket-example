@@ -22,21 +22,33 @@ export class EventSubscription {
   @SubscribeMessage(EVENT_SUBSCRIPTION.MESSAGE)
   onMessage(@MessageBody() payload: any, @ConnectedSocket() client: any) {
     this.logger.log(`MESSAGE_PAYLOAD: ${JSON.stringify(payload)}`);
-    const resultMessage = this.eventService.sendMessage(client.id, payload, EVENT_SUBSCRIPTION.MESSAGE);
+    const resultMessage = this.eventService.sendMessage(
+      client.id,
+      payload,
+      EVENT_SUBSCRIPTION.MESSAGE,
+    );
     return resultMessage; // send message acknowledgement back to client
   }
 
   @SubscribeMessage(EVENT_SUBSCRIPTION.BROADCAST)
   onBroadcast(@MessageBody() payload: any, @ConnectedSocket() client: any) {
     this.logger.log(`BROADCAST_PAYLOAD: ${JSON.stringify(payload)}`);
-    const resultMessage = this.eventService.sendBroadcast(client.id, payload, EVENT_SUBSCRIPTION.BROADCAST);
+    const resultMessage = this.eventService.sendBroadcast(
+      client.id,
+      payload,
+      EVENT_SUBSCRIPTION.BROADCAST,
+    );
     return resultMessage; // send message acknowledgement back to client
   }
 
   @SubscribeMessage(EVENT_SUBSCRIPTION.EVENT)
   onEvent(@MessageBody() payload: any, @ConnectedSocket() client: any) {
     this.logger.log(`EVENT_PAYLOAD: ${JSON.stringify(payload)}`);
-    const resultMessage = this.eventService.handleEvent(client, payload, EVENT_SUBSCRIPTION.EVENT);
+    const resultMessage = this.eventService.handleEvent(
+      client,
+      payload,
+      EVENT_SUBSCRIPTION.EVENT,
+    );
     return resultMessage; // send message acknowledgement back to client
   }
 }
