@@ -23,7 +23,7 @@ export class EventService {
     const found = this.getConnection(connection.id);
     if (found) {
       throw new Error(
-        `Connection ID - (${connection.id}) is already connected`,
+        `Already a connection found for Connection ID ${connection.id}.`,
       );
     }
 
@@ -45,7 +45,7 @@ export class EventService {
   removeConnection(connectionId: string) {
     const connection = this.getConnection(connectionId);
     if (!connection) {
-      throw new Error(`No active connection found for ID - (${connectionId}).`);
+      throw new Error(`No active connection found for ID ${connectionId}.`);
     }
 
     this.connectionPool.delete(connectionId);
@@ -62,65 +62,46 @@ export class EventService {
   }
 
   handleEvent(connection: any, payload: any, event: string) {
-    if (typeof payload === 'string') {
-      return `Field parameter 'eventType' and 'message' required for sending an event.`;
+    if (!payload || !payload.evenType || !payload.message) {
+      return `Invalid payload format.`;
     }
 
-    const eventType = payload.eventType;
-    const message = payload.message;
-
-    if (!eventType || !message) {
-      return `Field parameter 'eventType' and 'message' required for sending an event.`;
-    }
-
-    switch (eventType) {
+    switch (payload.eventType) {
       case 'TEST':
         break;
 
       default:
-        return `No Event found to handle for event type - (${eventType}).`;
+        return `Unknown event type: ${payload.eventType}.`;
     }
   }
 
   sendMessage(connectionId, payload, event): string {
-    if (typeof payload === 'string') {
-      return `Field parameter 'receiverId' and 'message' required for sending messages.`;
-    }
-
-    const receiverId = payload.receiverId;
-    const message = payload.message;
-
-    if (!receiverId || !message) {
-      return `Field parameter 'receiverId' and 'message' required for sending messages.`;
+    if (!payload || !payload.receiverId || !payload.message) {
+      return `Invalid payload format.`;
     }
 
     const messageBody = {
       event: event,
-      data: { senderId: connectionId, message: message },
+      data: { senderId: connectionId, message: payload.message },
     };
 
     try {
-      this.send(receiverId, messageBody);
+      this.send(payload.receiverId, messageBody);
+      return `Message sent to connection ID ${payload.receiverId}.`;
     } catch (error) {
+      this.logger.error(error.message || error);
       return error.message || error;
     }
-
-    return `Message sent to connection ID - (${receiverId}).`;
   }
 
   sendBroadcast(connectionId, payload, event): string {
-    if (typeof payload === 'string') {
-      return `Field parameter 'message' required for sending a broadcast.`;
-    }
-
-    const message = payload.message;
-    if (!message) {
-      return `Field parameter 'message' required for sending a broadcast.`;
+    if (!payload || !payload.message) {
+      return `Invalid payload format.`;
     }
 
     const messageBody = {
       event: event,
-      data: { senderId: connectionId, message: message },
+      data: { senderId: connectionId, message: payload.message },
     };
 
     this.broadcast(connectionId, messageBody);
@@ -131,7 +112,7 @@ export class EventService {
     const connection = this.getConnection(connectionId);
     if (!connection) {
       throw new Error(
-        `No active connection found for connection Id - (${connectionId}).`,
+        `No active connection found for connection Id ${connectionId}.`,
       );
     }
     connection.send(JSON.stringify(payload));
